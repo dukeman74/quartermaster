@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://c21i12j16k1fi"]
+
+[ext_resource type="Script" uid="uid://cqrbxr7gm4tbp" path="res://menu.gd" id="1_pohso"]
+[ext_resource type="Script" uid="uid://ccnb08gx8yycu" path="res://have.gd" id="2_psafj"]
+
+[sub_resource type="SystemFont" id="SystemFont_psafj"]
+
+[node name="Menu" type="Control" unique_id=1505111558]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pohso")
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=50374542]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 1
+tabs_visible = false
+
+[node name="MainMenu" type="VBoxContainer" parent="TabContainer" unique_id=1537824872]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="HaveButton" type="Button" parent="TabContainer/MainMenu" unique_id=307338640]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Have"
+
+[node name="NeedButton" type="Button" parent="TabContainer/MainMenu" unique_id=262563939]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Need"
+
+[node name="HaveTab" type="VBoxContainer" parent="TabContainer" unique_id=1305098089]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="FilterEdit" type="LineEdit" parent="TabContainer/HaveTab" unique_id=494536925]
+layout_mode = 2
+placeholder_text = "Filter"
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/HaveTab" unique_id=687997516]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Have" type="Control" parent="TabContainer/HaveTab/ScrollContainer" unique_id=1608926751 node_paths=PackedStringArray("menu", "have_tab", "filter_edit", "scroll_container")]
+custom_minimum_size = Vector2(0, 7000)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_psafj")
+menu = NodePath("../../../..")
+have_tab = NodePath("../..")
+filter_edit = NodePath("../../FilterEdit")
+scroll_container = NodePath("..")
+font = SubResource("SystemFont_psafj")
+
+[connection signal="text_changed" from="TabContainer/HaveTab/FilterEdit" to="TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]

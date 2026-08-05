@@ -11,8 +11,17 @@ config_version=5
 [application]
 
 config/name="quartermaster"
+run/main_scene="uid://c21i12j16k1fi"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://einxcjwfdwbb"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/unsafe_property_access=1
+gdscript/warnings/unsafe_method_access=1
+gdscript/warnings/unsafe_cast=1
+gdscript/warnings/unsafe_call_argument=1
 
 [physics]
 
