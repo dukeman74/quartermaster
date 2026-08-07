@@ -2,6 +2,16 @@ class_name Menu extends Control
 
 
 @onready var inventory:= Inventory.new()
+@export var name_edit: LineEdit
+@export var date_edit: LineEdit
+@export var intone_indicator: ColorRect
+@export var have: Have
+@export var main_menu: VBoxContainer
+@export var have_tab: VBoxContainer
+@export var have_modification_row: HBoxContainer
+@export var save_button: Button
+@export var sync_button: Button
+
 
 const settings_file_path:=&"user://settings.json"
 const items_path:=&"user://items.json"
@@ -10,6 +20,10 @@ const backups_folder:=&"user://backups/"
 
 var authority:String
 const auth_key:=&"authority"
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("back"):
+		main_menu.visible = true
 
 const default_settings:Dictionary = {
 	auth_key: "localhost"
@@ -47,45 +61,10 @@ func _ready() -> void:
 			return
 		inventory.import_requests(requests_file)
 		requests_file.close()
-	var items := inventory.items
-	items.append(Item.new("bongo", Time.get_unix_time_from_system() + 100))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	items.append(Item.new("bongo", 781907))
-	items.append(Item.new("bgongo", 7819027))
-	items.append(Item.new("shmgongo", 78127))
-	$TabContainer/HaveTab/ScrollContainer/Have.items = inventory.items
-	$TabContainer/HaveTab/ScrollContainer/Have.filter_changed()
+	have._on_filter_edit_text_changed()
+	have_modification_row.visible = authority == "localhost"
+	save_button.visible = authority == "localhost"
+	sync_button.visible = authority != "localhost"
 
 func save() -> void:
 	if not DirAccess.dir_exists_absolute(backups_folder):
@@ -101,4 +80,79 @@ func save() -> void:
 	inventory.export_requests(items)
 	items.close()
 
+func get_item_name() -> String:
+	var current := name_edit.text.to_lower()
+	return current
+
+func _on_week_button_pressed() -> void:
+	future_item(Have.day * 7)
+
+func _on_month_button_pressed() -> void:
+	future_item(Have.month)
+
+func _on_year_button_pressed() -> void:
+	future_item(Have.year)
+
+func future_item(future_amount:int) -> void:
+	var item_name := get_item_name()
+	if item_name == "": return
+	intone_item(int(Time.get_unix_time_from_system()) + future_amount, item_name)
+
+@onready var indicator_tween :Tween
+func intone_item(time:int, item_name:String) -> void:
+	if indicator_tween: indicator_tween.kill()
+	indicator_tween = get_tree().create_tween()
+	intone_indicator.color = Color(intone_indicator.color, 1)
+	indicator_tween.tween_property(intone_indicator, "color", Color(intone_indicator.color, 0), 1)
+	var new_item:= Item.new(item_name, time)
+	var list_position := inventory.items.bsearch_custom(new_item,func(item1:Item, item2:Item) -> bool: return item1.expiry_time<item2.expiry_time)
+	inventory.items.insert(list_position, new_item)
+	have._on_filter_edit_text_changed()
+
+const month_to_month:Dictionary[String, int] = {
+	"jan": 1,
+	"feb": 2,
+	"mar": 3,
+	"apr": 4,
+	"may": 5,
+	"jun": 6,
+	"jul": 7,
+	"aug": 8,
+	"sep": 9,
+	"oct": 10,
+	"nov": 11,
+	"dec": 12,
+}
+
+func _on_text_submitted(_new_text: String) -> void:
+	var item_name := get_item_name()
+	if item_name == "": return
+	var date_string :String = date_edit.text
+	var parts:= date_string.split(" ")
+	if parts[0] not in month_to_month: return
+	var month := month_to_month[parts[0]]
+	var year:= int(parts[2])
+	if len(parts[2]) == 2:
+		year += 2000
+	var time_dict := {"month": month, "day": int(parts[1]), "year":year, "hour":23, "minute":59, "second":59}
+	var time := Time.get_unix_time_from_datetime_dict(time_dict)
+	if time < Time.get_unix_time_from_system(): return
+	intone_item(time, item_name)
+
+
+func _on_have_button_pressed() -> void:
+	have_tab.visible = true
+
 	
+
+func _on_save_button_pressed() -> void:
+	var items_file := FileAccess.open(items_path, FileAccess.WRITE)
+	inventory.export_items(items_file)
+	items_file.close()
+	var requests_file := FileAccess.open(requests_path, FileAccess.WRITE)
+	inventory.export_requests(requests_file)
+	requests_file.close()
+
+
+func _on_sync_button_pressed() -> void:
+	pass # Replace with function body.

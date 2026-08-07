@@ -24,9 +24,12 @@ func import_items(file:FileAccess) -> void:
 			items.append(Item.new(key_string, time))
 			counts[key_string] = counts.get(key_string, 0) + 1
 	items.sort_custom(func(a:Item, b:Item) -> bool: return a.expiry_time < b.expiry_time)
-	
+
+func item_to_representation(item:Item) -> Dictionary:
+	return {item.name: item.expiry_time}
+
 func export_items(file:FileAccess) -> void:
-	file.store_string(JSON.stringify(items,"	",false))
+	file.store_string(JSON.stringify(items.map(item_to_representation),"	",false))
 
 func import_requests(file:FileAccess) -> void:
 	requests = {}

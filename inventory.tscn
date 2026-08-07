@@ -5,7 +5,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_psafj"]
 
-[node name="Menu" type="Control" unique_id=1505111558]
+[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "sync_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +13,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pohso")
+name_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/NameEdit")
+date_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/DateEdit")
+intone_indicator = NodePath("TabContainer/HaveTab/HaveModificationRow/IntoneIndicator")
+have = NodePath("TabContainer/HaveTab/ScrollContainer/Have")
+main_menu = NodePath("TabContainer/MainMenu")
+have_tab = NodePath("TabContainer/HaveTab")
+have_modification_row = NodePath("TabContainer/HaveTab/HaveModificationRow")
+save_button = NodePath("TabContainer/MainMenu/SaveButton")
+sync_button = NodePath("TabContainer/MainMenu/SyncButton")
 
 [node name="TabContainer" type="TabContainer" parent="." unique_id=50374542]
 layout_mode = 1
@@ -21,11 +30,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 
 [node name="MainMenu" type="VBoxContainer" parent="TabContainer" unique_id=1537824872]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -39,9 +47,52 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Need"
 
+[node name="Spacer" type="Control" parent="TabContainer/MainMenu" unique_id=157554839]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="TabContainer/MainMenu" unique_id=488224805]
+layout_mode = 2
+text = "Save"
+
+[node name="SyncButton" type="Button" parent="TabContainer/MainMenu" unique_id=1542147529]
+layout_mode = 2
+text = "Sync"
+
 [node name="HaveTab" type="VBoxContainer" parent="TabContainer" unique_id=1305098089]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="HaveModificationRow" type="HBoxContainer" parent="TabContainer/HaveTab" unique_id=2145808226]
+layout_mode = 2
+
+[node name="IntoneIndicator" type="ColorRect" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=429975726]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+color = Color(0, 0.9411765, 0.3529412, 0)
+
+[node name="NameEdit" type="LineEdit" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=184897250]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Name"
+
+[node name="DateEdit" type="LineEdit" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=39666519]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "date"
+
+[node name="WeekButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=1530935861]
+layout_mode = 2
+text = "WEEK"
+
+[node name="MonthButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=2062457305]
+layout_mode = 2
+text = "MONTH"
+
+[node name="YearButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=1177781688]
+layout_mode = 2
+text = "YEAR"
 
 [node name="FilterEdit" type="LineEdit" parent="TabContainer/HaveTab" unique_id=494536925]
 layout_mode = 2
@@ -64,4 +115,12 @@ filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_psafj")
 
+[connection signal="pressed" from="TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
+[connection signal="pressed" from="TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="TabContainer/MainMenu/SyncButton" to="." method="_on_sync_button_pressed"]
+[connection signal="text_submitted" from="TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
+[connection signal="text_submitted" from="TabContainer/HaveTab/HaveModificationRow/DateEdit" to="." method="_on_text_submitted"]
+[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/WeekButton" to="." method="_on_week_button_pressed"]
+[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/MonthButton" to="." method="_on_month_button_pressed"]
+[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/YearButton" to="." method="_on_year_button_pressed"]
 [connection signal="text_changed" from="TabContainer/HaveTab/FilterEdit" to="TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]

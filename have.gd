@@ -1,4 +1,4 @@
-extends Control
+class_name Have extends Control
 @export var menu: Menu
 @export var have_tab: VBoxContainer
 @export var filter_edit: LineEdit
@@ -50,8 +50,8 @@ func _draw() -> void:
 		y+=line_sep
 
 var filter_regex := RegEx.new()
-func _on_filter_edit_text_changed(new_text: String) -> void:
-	var error:=filter_regex.compile(new_text,false)
+func _on_filter_edit_text_changed(_new_text: String="") -> void:
+	var error:=filter_regex.compile(filter_edit.text,false)
 	filter_edit.self_modulate = Color.RED if error != Error.OK else Color.WHITE
 	if error != Error.OK:
 		items = menu.inventory.items
