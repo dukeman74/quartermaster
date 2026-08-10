@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cqrbxr7gm4tbp" path="res://menu.gd" id="1_pohso"]
 [ext_resource type="Script" uid="uid://ccnb08gx8yycu" path="res://have.gd" id="2_psafj"]
+[ext_resource type="Script" uid="uid://s0wmybw6ax6f" path="res://need.gd" id="3_5tt2m"]
 
 [sub_resource type="SystemFont" id="SystemFont_psafj"]
 
-[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "sync_button")]
+[sub_resource type="SystemFont" id="SystemFont_5tt2m"]
+
+[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "name_name_edit", "number_edit", "intone_2_indicator", "need", "need_tab", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "sync_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,6 +18,11 @@ grow_vertical = 2
 script = ExtResource("1_pohso")
 name_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/NameEdit")
 date_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/DateEdit")
+name_name_edit = NodePath("TabContainer/NeedTab/NeedModificationRow/NameNameEdit")
+number_edit = NodePath("TabContainer/NeedTab/NeedModificationRow/NumberEdit")
+intone_2_indicator = NodePath("TabContainer/NeedTab/NeedModificationRow/Intone2Indicator")
+need = NodePath("TabContainer/NeedTab/ScrollContainer/Need")
+need_tab = NodePath("TabContainer/NeedTab")
 intone_indicator = NodePath("TabContainer/HaveTab/HaveModificationRow/IntoneIndicator")
 have = NodePath("TabContainer/HaveTab/ScrollContainer/Have")
 main_menu = NodePath("TabContainer/MainMenu")
@@ -115,7 +123,52 @@ filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_psafj")
 
+[node name="NeedTab" type="VBoxContainer" parent="TabContainer" unique_id=992872114]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="NeedModificationRow" type="HBoxContainer" parent="TabContainer/NeedTab" unique_id=1981067811]
+layout_mode = 2
+
+[node name="Intone2Indicator" type="ColorRect" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=671673343]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+color = Color(0, 0.9411765, 0.3529412, 0)
+
+[node name="NameNameEdit" type="LineEdit" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=2141434013]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Name"
+
+[node name="NumberEdit" type="LineEdit" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=758716181]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "count"
+
+[node name="FilterEdit" type="LineEdit" parent="TabContainer/NeedTab" unique_id=827321577]
+layout_mode = 2
+placeholder_text = "Filter"
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/NeedTab" unique_id=1403072081]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Need" type="Control" parent="TabContainer/NeedTab/ScrollContainer" unique_id=1642831733 node_paths=PackedStringArray("menu", "need_tab", "filter_edit", "scroll_container")]
+custom_minimum_size = Vector2(0, 7000)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_5tt2m")
+menu = NodePath("../../../..")
+need_tab = NodePath("../..")
+filter_edit = NodePath("../../FilterEdit")
+scroll_container = NodePath("..")
+font = SubResource("SystemFont_5tt2m")
+
 [connection signal="pressed" from="TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
+[connection signal="pressed" from="TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
 [connection signal="pressed" from="TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="TabContainer/MainMenu/SyncButton" to="." method="_on_sync_button_pressed"]
 [connection signal="text_submitted" from="TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
@@ -124,3 +177,5 @@ font = SubResource("SystemFont_psafj")
 [connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/MonthButton" to="." method="_on_month_button_pressed"]
 [connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/YearButton" to="." method="_on_year_button_pressed"]
 [connection signal="text_changed" from="TabContainer/HaveTab/FilterEdit" to="TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]
+[connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NameNameEdit" to="." method="_on_need_submitted"]
+[connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NumberEdit" to="." method="_on_need_submitted"]

@@ -44,6 +44,7 @@ func happy_time(expiry:int) -> String:
 const line_sep:float = 25
 func _draw() -> void:
 	var y:float = 30
+	var _top_pos:Vector2 = make_canvas_position_local(scroll_container.global_position)
 	for item in items:
 		draw_string(font, Vector2(0, y),item.name)
 		draw_string(font, Vector2(size.x-200, y),happy_time(item.expiry_time),HORIZONTAL_ALIGNMENT_RIGHT,200)
