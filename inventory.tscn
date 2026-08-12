@@ -111,14 +111,13 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Have" type="Control" parent="TabContainer/HaveTab/ScrollContainer" unique_id=1608926751 node_paths=PackedStringArray("menu", "have_tab", "filter_edit", "scroll_container")]
+[node name="Have" type="Control" parent="TabContainer/HaveTab/ScrollContainer" unique_id=1608926751 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
 custom_minimum_size = Vector2(0, 7000)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_psafj")
 menu = NodePath("../../../..")
-have_tab = NodePath("../..")
 filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_psafj")
@@ -155,14 +154,13 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Need" type="Control" parent="TabContainer/NeedTab/ScrollContainer" unique_id=1642831733 node_paths=PackedStringArray("menu", "need_tab", "filter_edit", "scroll_container")]
+[node name="Need" type="Control" parent="TabContainer/NeedTab/ScrollContainer" unique_id=1642831733 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
 custom_minimum_size = Vector2(0, 7000)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3_5tt2m")
 menu = NodePath("../../../..")
-need_tab = NodePath("../..")
 filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_5tt2m")
@@ -179,3 +177,4 @@ font = SubResource("SystemFont_5tt2m")
 [connection signal="text_changed" from="TabContainer/HaveTab/FilterEdit" to="TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]
 [connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NameNameEdit" to="." method="_on_need_submitted"]
 [connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NumberEdit" to="." method="_on_need_submitted"]
+[connection signal="text_changed" from="TabContainer/NeedTab/FilterEdit" to="TabContainer/NeedTab/ScrollContainer/Need" method="_on_filter_edit_text_changed"]

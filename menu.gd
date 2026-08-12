@@ -120,6 +120,7 @@ func intone_item(time:int, item_name:String) -> void:
 	var new_item:= Item.new(item_name, time)
 	var list_position := inventory.items.bsearch_custom(new_item,func(item1:Item, item2:Item) -> bool: return item1.expiry_time<item2.expiry_time)
 	inventory.items.insert(list_position, new_item)
+	inventory.counts[new_item.name] = inventory.counts.get(new_item.name, 0) + 1
 	have._on_filter_edit_text_changed()
 
 const month_to_month:Dictionary[String, int] = {
@@ -146,7 +147,8 @@ func _on_text_submitted(_new_text: String) -> void:
 	if parts[0] not in month_to_month: 
 		if not parts[0].is_valid_int(): return
 		month = int(parts[0])
-	month = month_to_month[parts[0]]
+	else:
+		month = month_to_month[parts[0]]
 	var year:= int(parts[2])
 	if len(parts[2]) == 2:
 		year += 2000
@@ -158,6 +160,7 @@ func _on_text_submitted(_new_text: String) -> void:
 
 func _on_have_button_pressed() -> void:
 	have_tab.visible = true
+	have.filter_changed.call_deferred()
 
 
 func _on_save_button_pressed() -> void:
@@ -188,3 +191,4 @@ func _on_need_submitted(_new_text: String) -> void:
 
 func _on_need_button_pressed() -> void:
 	need_tab.visible = true
+	need.filter_changed.call_deferred()
