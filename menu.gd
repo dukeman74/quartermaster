@@ -30,6 +30,10 @@ const backups_folder:=&"user://backups/"
 var authority:String
 const auth_key:=&"authority"
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		main_menu.visible = true
+
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("back"):
 		main_menu.visible = true

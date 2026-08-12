@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c21i12j16k1fi"]
 
 [ext_resource type="Script" uid="uid://cqrbxr7gm4tbp" path="res://menu.gd" id="1_pohso"]
+[ext_resource type="Script" uid="uid://bi5es6qaqb4g5" path="res://space.gd" id="2_mrqgh"]
 [ext_resource type="Script" uid="uid://ccnb08gx8yycu" path="res://have.gd" id="2_psafj"]
 [ext_resource type="Script" uid="uid://s0wmybw6ax6f" path="res://need.gd" id="3_5tt2m"]
 
@@ -16,165 +17,174 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pohso")
-name_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/NameEdit")
-date_edit = NodePath("TabContainer/HaveTab/HaveModificationRow/DateEdit")
-name_name_edit = NodePath("TabContainer/NeedTab/NeedModificationRow/NameNameEdit")
-number_edit = NodePath("TabContainer/NeedTab/NeedModificationRow/NumberEdit")
-intone_2_indicator = NodePath("TabContainer/NeedTab/NeedModificationRow/Intone2Indicator")
-need = NodePath("TabContainer/NeedTab/ScrollContainer/Need")
-need_tab = NodePath("TabContainer/NeedTab")
-intone_indicator = NodePath("TabContainer/HaveTab/HaveModificationRow/IntoneIndicator")
-have = NodePath("TabContainer/HaveTab/ScrollContainer/Have")
-main_menu = NodePath("TabContainer/MainMenu")
-have_tab = NodePath("TabContainer/HaveTab")
-have_modification_row = NodePath("TabContainer/HaveTab/HaveModificationRow")
-save_button = NodePath("TabContainer/MainMenu/SaveButton")
-sync_button = NodePath("TabContainer/MainMenu/SyncButton")
+name_edit = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow/NameEdit")
+date_edit = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow/DateEdit")
+name_name_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NameNameEdit")
+number_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NumberEdit")
+intone_2_indicator = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/Intone2Indicator")
+need = NodePath("VBoxContainer/TabContainer/NeedTab/ScrollContainer/Need")
+need_tab = NodePath("VBoxContainer/TabContainer/NeedTab")
+intone_indicator = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow/IntoneIndicator")
+have = NodePath("VBoxContainer/TabContainer/HaveTab/ScrollContainer/Have")
+main_menu = NodePath("VBoxContainer/TabContainer/MainMenu")
+have_tab = NodePath("VBoxContainer/TabContainer/HaveTab")
+have_modification_row = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow")
+save_button = NodePath("VBoxContainer/TabContainer/MainMenu/SaveButton")
+sync_button = NodePath("VBoxContainer/TabContainer/MainMenu/SyncButton")
 
-[node name="TabContainer" type="TabContainer" parent="." unique_id=50374542]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=991348235]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Space" type="Control" parent="VBoxContainer" unique_id=1613137576]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+script = ExtResource("2_mrqgh")
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=50374542]
+layout_mode = 2
+size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="MainMenu" type="VBoxContainer" parent="TabContainer" unique_id=1537824872]
+[node name="MainMenu" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1537824872]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="HaveButton" type="Button" parent="TabContainer/MainMenu" unique_id=307338640]
+[node name="HaveButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=307338640]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Have"
 
-[node name="NeedButton" type="Button" parent="TabContainer/MainMenu" unique_id=262563939]
+[node name="NeedButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=262563939]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Need"
 
-[node name="Spacer" type="Control" parent="TabContainer/MainMenu" unique_id=157554839]
+[node name="Spacer" type="Control" parent="VBoxContainer/TabContainer/MainMenu" unique_id=157554839]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="TabContainer/MainMenu" unique_id=488224805]
+[node name="SaveButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=488224805]
 layout_mode = 2
 text = "Save"
 
-[node name="SyncButton" type="Button" parent="TabContainer/MainMenu" unique_id=1542147529]
+[node name="SyncButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1542147529]
 layout_mode = 2
 text = "Sync"
 
-[node name="HaveTab" type="VBoxContainer" parent="TabContainer" unique_id=1305098089]
+[node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="HaveModificationRow" type="HBoxContainer" parent="TabContainer/HaveTab" unique_id=2145808226]
+[node name="HaveModificationRow" type="HBoxContainer" parent="VBoxContainer/TabContainer/HaveTab" unique_id=2145808226]
 layout_mode = 2
 
-[node name="IntoneIndicator" type="ColorRect" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=429975726]
+[node name="IntoneIndicator" type="ColorRect" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=429975726]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 color = Color(0, 0.9411765, 0.3529412, 0)
 
-[node name="NameEdit" type="LineEdit" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=184897250]
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=184897250]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Name"
 
-[node name="DateEdit" type="LineEdit" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=39666519]
+[node name="DateEdit" type="LineEdit" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=39666519]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "date"
 
-[node name="WeekButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=1530935861]
+[node name="WeekButton" type="Button" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=1530935861]
 layout_mode = 2
 text = "WEEK"
 
-[node name="MonthButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=2062457305]
+[node name="MonthButton" type="Button" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=2062457305]
 layout_mode = 2
 text = "MONTH"
 
-[node name="YearButton" type="Button" parent="TabContainer/HaveTab/HaveModificationRow" unique_id=1177781688]
+[node name="YearButton" type="Button" parent="VBoxContainer/TabContainer/HaveTab/HaveModificationRow" unique_id=1177781688]
 layout_mode = 2
 text = "YEAR"
 
-[node name="FilterEdit" type="LineEdit" parent="TabContainer/HaveTab" unique_id=494536925]
+[node name="FilterEdit" type="LineEdit" parent="VBoxContainer/TabContainer/HaveTab" unique_id=494536925]
 layout_mode = 2
 placeholder_text = "Filter"
 alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/HaveTab" unique_id=687997516]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/HaveTab" unique_id=687997516]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Have" type="Control" parent="TabContainer/HaveTab/ScrollContainer" unique_id=1608926751 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
+[node name="Have" type="Control" parent="VBoxContainer/TabContainer/HaveTab/ScrollContainer" unique_id=1608926751 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
 custom_minimum_size = Vector2(0, 7000)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_psafj")
-menu = NodePath("../../../..")
+menu = NodePath("../../../../..")
 filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_psafj")
 
-[node name="NeedTab" type="VBoxContainer" parent="TabContainer" unique_id=992872114]
+[node name="NeedTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=992872114]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="NeedModificationRow" type="HBoxContainer" parent="TabContainer/NeedTab" unique_id=1981067811]
+[node name="NeedModificationRow" type="HBoxContainer" parent="VBoxContainer/TabContainer/NeedTab" unique_id=1981067811]
 layout_mode = 2
 
-[node name="Intone2Indicator" type="ColorRect" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=671673343]
+[node name="Intone2Indicator" type="ColorRect" parent="VBoxContainer/TabContainer/NeedTab/NeedModificationRow" unique_id=671673343]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 color = Color(0, 0.9411765, 0.3529412, 0)
 
-[node name="NameNameEdit" type="LineEdit" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=2141434013]
+[node name="NameNameEdit" type="LineEdit" parent="VBoxContainer/TabContainer/NeedTab/NeedModificationRow" unique_id=2141434013]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Name"
 
-[node name="NumberEdit" type="LineEdit" parent="TabContainer/NeedTab/NeedModificationRow" unique_id=758716181]
+[node name="NumberEdit" type="LineEdit" parent="VBoxContainer/TabContainer/NeedTab/NeedModificationRow" unique_id=758716181]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "count"
 
-[node name="FilterEdit" type="LineEdit" parent="TabContainer/NeedTab" unique_id=827321577]
+[node name="FilterEdit" type="LineEdit" parent="VBoxContainer/TabContainer/NeedTab" unique_id=827321577]
 layout_mode = 2
 placeholder_text = "Filter"
 alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/NeedTab" unique_id=1403072081]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/NeedTab" unique_id=1403072081]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Need" type="Control" parent="TabContainer/NeedTab/ScrollContainer" unique_id=1642831733 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
+[node name="Need" type="Control" parent="VBoxContainer/TabContainer/NeedTab/ScrollContainer" unique_id=1642831733 node_paths=PackedStringArray("menu", "filter_edit", "scroll_container")]
 custom_minimum_size = Vector2(0, 7000)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3_5tt2m")
-menu = NodePath("../../../..")
+menu = NodePath("../../../../..")
 filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_5tt2m")
 
-[connection signal="pressed" from="TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
-[connection signal="pressed" from="TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
-[connection signal="pressed" from="TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="TabContainer/MainMenu/SyncButton" to="." method="_on_sync_button_pressed"]
-[connection signal="text_submitted" from="TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
-[connection signal="text_submitted" from="TabContainer/HaveTab/HaveModificationRow/DateEdit" to="." method="_on_text_submitted"]
-[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/WeekButton" to="." method="_on_week_button_pressed"]
-[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/MonthButton" to="." method="_on_month_button_pressed"]
-[connection signal="pressed" from="TabContainer/HaveTab/HaveModificationRow/YearButton" to="." method="_on_year_button_pressed"]
-[connection signal="text_changed" from="TabContainer/HaveTab/FilterEdit" to="TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]
-[connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NameNameEdit" to="." method="_on_need_submitted"]
-[connection signal="text_submitted" from="TabContainer/NeedTab/NeedModificationRow/NumberEdit" to="." method="_on_need_submitted"]
-[connection signal="text_changed" from="TabContainer/NeedTab/FilterEdit" to="TabContainer/NeedTab/ScrollContainer/Need" method="_on_filter_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SyncButton" to="." method="_on_sync_button_pressed"]
+[connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
+[connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/DateEdit" to="." method="_on_text_submitted"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/WeekButton" to="." method="_on_week_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/MonthButton" to="." method="_on_month_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/YearButton" to="." method="_on_year_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/HaveTab/FilterEdit" to="VBoxContainer/TabContainer/HaveTab/ScrollContainer/Have" method="_on_filter_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NameNameEdit" to="." method="_on_need_submitted"]
+[connection signal="text_submitted" from="VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NumberEdit" to="." method="_on_need_submitted"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/NeedTab/FilterEdit" to="VBoxContainer/TabContainer/NeedTab/ScrollContainer/Need" method="_on_filter_edit_text_changed"]

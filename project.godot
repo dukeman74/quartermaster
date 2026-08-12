@@ -12,6 +12,7 @@ config_version=5
 
 config/name="quartermaster"
 run/main_scene="uid://c21i12j16k1fi"
+config/quit_on_go_back=false
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://einxcjwfdwbb"
 
@@ -22,6 +23,10 @@ gdscript/warnings/unsafe_property_access=1
 gdscript/warnings/unsafe_method_access=1
 gdscript/warnings/unsafe_cast=1
 gdscript/warnings/unsafe_call_argument=1
+
+[display]
+
+window/handheld/orientation=5
 
 [input]
 
@@ -38,3 +43,4 @@ back={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true
