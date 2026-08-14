@@ -5,6 +5,15 @@ class_name Menu extends Control
 @export var name_edit: LineEdit
 @export var date_edit: LineEdit
 
+@export var have_button: Button
+@export var need_button: Button
+@export var progress_bar: ProgressBar
+@export var spacer_2: Control
+
+@export var debug_message: RichTextLabel
+
+
+
 @export var name_name_edit: LineEdit
 @export var number_edit: LineEdit
 
@@ -19,9 +28,12 @@ class_name Menu extends Control
 @export var have_tab: VBoxContainer
 @export var have_modification_row: HBoxContainer
 @export var save_button: Button
-@export var sync_button: Button
 
+@export var pull_button: Button
+@export var push_button: Button
 
+const NONCE :String = "73fghu"
+const PORT := 57488
 const settings_file_path:=&"user://settings.json"
 const items_path:=&"user://items.json"
 const requests_path:=&"user://requests.json"
@@ -29,6 +41,9 @@ const backups_folder:=&"user://backups/"
 
 var authority:String
 const auth_key:=&"authority"
+
+var server:bool
+const server_key:=&"server"
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
@@ -39,46 +54,68 @@ func _input(event: InputEvent) -> void:
 		main_menu.visible = true
 
 const default_settings:Dictionary = {
-	auth_key: "localhost"
+	auth_key: "localhost",
+	server_key: false,
 }
+
+var tcp_server:TCPServer
+var peers:Dictionary[StreamPeerTCP, bool]
+
+func good_print(to_print:String) -> void:
+	print(to_print)
+	display_debug_message_in_menu.call_deferred(to_print)
+
+func display_debug_message_in_menu(to_print:String) -> void:
+	debug_message.text = to_print
+	debug_message.self_modulate = Color.WHITE
+	await get_tree().create_timer(1).timeout
+	var tween := get_tree().create_tween()
+	tween.tween_property(debug_message, "self_modulate", Color(Color.WHITE,0), 2)
 
 func _ready() -> void:
 	var settings:FileAccess
 	if not FileAccess.file_exists(settings_file_path):
 		settings = FileAccess.open(settings_file_path, FileAccess.WRITE)
 		if not settings: 
-			print("encountered: ", error_string(FileAccess.get_open_error()), " while trying to open ", settings_file_path, " for writing")
+			good_print("encountered: " + error_string(FileAccess.get_open_error()) + " while trying to open " + settings_file_path + " for writing")
 			return
 		settings.store_string(JSON.stringify(default_settings,"	",false))
 		settings.close()
 	settings = FileAccess.open(settings_file_path, FileAccess.READ)
 	if not settings: 
-		print("encountered: ", error_string(FileAccess.get_open_error()), " while trying to open ", settings_file_path, " for reading")
+		good_print("encountered: " + error_string(FileAccess.get_open_error()) + " while trying to open " + settings_file_path + " for reading")
 		return
 	var thing:Variant = JSON.parse_string(settings.get_as_text())
 	if thing is not Dictionary: return
+	var settings_dict:Dictionary = thing
 	if auth_key not in thing: return
-	authority = thing[auth_key]
+	authority = settings_dict[auth_key]
+	@warning_ignore("unsafe_cast")
+	server = settings_dict.get(server_key, false) as bool
 	settings.close()
 	if FileAccess.file_exists(items_path):
 		var items_file := FileAccess.open(items_path, FileAccess.READ)
 		if not items_file: 
-			print("encountered: ", error_string(FileAccess.get_open_error()), " while trying to open ", items_path, " for reading")
+			good_print("encountered: " + error_string(FileAccess.get_open_error()) + " while trying to open " + items_path + " for reading")
 			return
-		inventory.import_items(items_file)
+		inventory.load_items_from_file(items_file)
 		items_file.close()
 	if FileAccess.file_exists(requests_path):
 		var requests_file := FileAccess.open(requests_path, FileAccess.READ)
 		if not requests_file: 
-			print("encountered: ", error_string(FileAccess.get_open_error()), " while trying to open ", requests_path, " for reading")
+			good_print("encountered: " + error_string(FileAccess.get_open_error()) + " while trying to open " + requests_path + " for reading")
 			return
-		inventory.import_requests(requests_file)
+		inventory.load_requests_from_file(requests_file)
 		requests_file.close()
 	have._on_filter_edit_text_changed()
 	need._on_filter_edit_text_changed()
-	have_modification_row.visible = authority == "localhost"
-	save_button.visible = authority == "localhost"
-	sync_button.visible = authority != "localhost"
+	#have_modification_row.visible = authority == "localhost"
+	#save_button.visible = authority == "localhost"
+	pull_button.visible = true#authority != "localhost"
+	push_button.visible = true#authority != "localhost"
+	if server:
+		tcp_server = TCPServer.new()
+		tcp_server.listen(PORT)
 
 func save() -> void:
 	if not DirAccess.dir_exists_absolute(backups_folder):
@@ -91,7 +128,7 @@ func save() -> void:
 	inventory.export_requests(requests)
 	requests.close()
 	var items:= FileAccess.open(items_path,FileAccess.WRITE)
-	inventory.export_requests(items)
+	inventory.export_items(items)
 	items.close()
 
 func get_item_name(edit:LineEdit) -> String:
@@ -168,16 +205,8 @@ func _on_have_button_pressed() -> void:
 
 
 func _on_save_button_pressed() -> void:
-	var items_file := FileAccess.open(items_path, FileAccess.WRITE)
-	inventory.export_items(items_file)
-	items_file.close()
-	var requests_file := FileAccess.open(requests_path, FileAccess.WRITE)
-	inventory.export_requests(requests_file)
-	requests_file.close()
+	save()
 
-
-func _on_sync_button_pressed() -> void:
-	pass # Replace with function body.
 
 
 func _on_need_submitted(_new_text: String) -> void:
@@ -190,9 +219,145 @@ func _on_need_submitted(_new_text: String) -> void:
 	flash_indicator(intone_2_indicator)
 	inventory.requests[item_name] = request
 	need._on_filter_edit_text_changed()
-	
 
 
 func _on_need_button_pressed() -> void:
 	need_tab.visible = true
 	need.filter_changed.call_deferred()
+
+func get_my_truth_as_bytes() -> PackedByteArray:
+	return (NONCE+"|" + inventory.items_to_text() + "|" + inventory.requests_to_text()).to_ascii_buffer()
+
+func push_wrapper() -> void:
+	push()
+	set.call_deferred("net_lock", false)
+
+func push() -> void:
+	var stream := StreamPeerTCP.new()
+	var error:= stream.connect_to_host(authority,PORT)
+	if error != Error.OK:
+		good_print(error_string(error))
+		return
+	var time_spent:int = 0
+	while time_spent < 10_000:
+		OS.delay_msec(20)
+		time_spent+=20
+		stream.poll()
+		if stream.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED:
+			if stream.get_status() != StreamPeerTCP.Status.STATUS_CONNECTING: 
+				good_print("connection was terminated before we could send")
+				return
+			continue
+		stream.put_data(get_my_truth_as_bytes())
+		stream.disconnect_from_host()
+		good_print("pushed data")
+		return
+	good_print("failed to establish connection to server")
+
+func _on_push_button_pressed() -> void:
+	net_lock=true
+	if executor and executor.is_started():
+		executor.wait_to_finish()
+	executor = Thread.new()
+	executor.start(pull_wrapper)
+
+func read_in_net_data(net_data:String) -> void:
+	var parts := net_data.split("|")
+	inventory.import_items(parts[1])
+	inventory.import_requests(parts[2])
+	have._on_filter_edit_text_changed()
+	need._on_filter_edit_text_changed()
+	#save()
+
+func _process(_delta: float) -> void:
+	if not server: return
+	while tcp_server.is_connection_available():
+		var peer := tcp_server.take_connection()
+		peers[peer] = true
+	for peer:StreamPeerTCP in peers.keys():
+		peer.poll()
+		if peer.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED and peer.get_status() != StreamPeerTCP.Status.STATUS_CONNECTING:
+			peers.erase(peer)
+			continue
+		var message_size := peer.get_available_bytes()
+		if message_size != 0:
+			var message_parts : = peer.get_data(message_size)
+			var error :Error= message_parts[0]
+			if error != Error.OK:
+				good_print("trying to read a message from %s, but encountered %s" % [peer.get_connected_host(), error_string(error)])
+				return
+			var bytes :PackedByteArray = message_parts[1]
+			var text:=bytes.get_string_from_ascii()
+			if text == "?":
+				var put_error := peer.put_data(get_my_truth_as_bytes())
+				if put_error != Error.OK:
+					good_print("trying to send %s the current truth, but encountered %s" % [peer.get_connected_host(), error_string(put_error)])
+			elif text.begins_with(NONCE):
+				read_in_net_data(text)
+				save()
+			
+var net_lock:bool:
+	set(val):
+		net_lock = val
+		for button in [push_button, pull_button, save_button, have_button, need_button] as Array[Button]:
+			button.disabled = net_lock
+		progress_bar.visible = net_lock
+		spacer_2.visible = not net_lock
+var executor:Thread
+
+func _on_pull_button_pressed() -> void:
+	net_lock=true
+	if executor and executor.is_started():
+		executor.wait_to_finish()
+	executor = Thread.new()
+	executor.start(pull_wrapper)
+
+func pull_wrapper() -> void:
+	pull()
+	set.call_deferred("net_lock", false)
+
+func pull() -> void:
+	var stream := StreamPeerTCP.new()
+	var connection_error := stream.connect_to_host(authority,PORT)
+	if connection_error != Error.OK:
+		good_print("trying to connect to %s but encountered this error %s" % [authority + ":" + str(PORT), error_string(connection_error)])
+		return
+	var time_spent:int = 0
+	var sent:bool = false
+	while time_spent < 10_000:
+		OS.delay_msec(20)
+		time_spent+=20
+		stream.poll()
+		if stream.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED and stream.get_status() != StreamPeerTCP.Status.STATUS_CONNECTING:
+			good_print("streampeer connection was dropped before we got a resonse")
+			return
+		if stream.get_status() != StreamPeerTCP.Status.STATUS_CONNECTED: continue
+		if not sent:
+			var send_error:= stream.put_data("?".to_ascii_buffer())
+			if send_error != Error.OK:
+				good_print("trying to request data from %s but encountered this error %s" % [authority + ":" + str(PORT), error_string(send_error)])
+				return
+			sent = true
+		var message_size := stream.get_available_bytes()
+		if message_size > 0:
+			var message_parts : = stream.get_data(message_size)
+			var error :Error= message_parts[0]
+			if error != Error.OK:
+				good_print("trying to read the current truth from %s, but encountered %s" % [stream.get_connected_host(), error_string(error)])
+				return
+			var bytes :PackedByteArray = message_parts[1]
+			good_print("pulled data")
+			read_in_net_data.call_deferred(bytes.get_string_from_ascii())
+			return
+	good_print("timed out waiting for response")
+
+func _on_check_button_toggled(toggled_on: bool) -> void: #debug button to allow a server and client on same machine
+	server = toggled_on
+	if server:
+		tcp_server = TCPServer.new()
+		var error:= tcp_server.listen(PORT)
+		if error != Error.OK:
+			good_print("trying to start server, but encountered %s" % error_string(error))
+			return
+		pull_button.visible = false
+		push_button.visible = false

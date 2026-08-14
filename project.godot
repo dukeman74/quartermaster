@@ -14,6 +14,7 @@ config/name="quartermaster"
 run/main_scene="uid://c21i12j16k1fi"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.6", "Forward Plus")
+boot_splash/image="uid://du8g4437wvsdr"
 config/icon="uid://einxcjwfdwbb"
 
 [debug]

@@ -9,7 +9,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_5tt2m"]
 
-[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "name_name_edit", "number_edit", "intone_2_indicator", "need", "need_tab", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "sync_button")]
+[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "have_button", "need_button", "progress_bar", "spacer_2", "debug_message", "name_name_edit", "number_edit", "intone_2_indicator", "need", "need_tab", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "pull_button", "push_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,6 +19,11 @@ grow_vertical = 2
 script = ExtResource("1_pohso")
 name_edit = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow/NameEdit")
 date_edit = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow/DateEdit")
+have_button = NodePath("VBoxContainer/TabContainer/MainMenu/HaveButton")
+need_button = NodePath("VBoxContainer/TabContainer/MainMenu/NeedButton")
+progress_bar = NodePath("VBoxContainer/TabContainer/MainMenu/ProgressBar")
+spacer_2 = NodePath("VBoxContainer/TabContainer/MainMenu/Spacer2")
+debug_message = NodePath("VBoxContainer/TabContainer/MainMenu/DebugMessage")
 name_name_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NameNameEdit")
 number_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NumberEdit")
 intone_2_indicator = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/Intone2Indicator")
@@ -30,7 +35,8 @@ main_menu = NodePath("VBoxContainer/TabContainer/MainMenu")
 have_tab = NodePath("VBoxContainer/TabContainer/HaveTab")
 have_modification_row = NodePath("VBoxContainer/TabContainer/HaveTab/HaveModificationRow")
 save_button = NodePath("VBoxContainer/TabContainer/MainMenu/SaveButton")
-sync_button = NodePath("VBoxContainer/TabContainer/MainMenu/SyncButton")
+pull_button = NodePath("VBoxContainer/TabContainer/MainMenu/PullButton")
+push_button = NodePath("VBoxContainer/TabContainer/MainMenu/PushButton")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=991348235]
 layout_mode = 1
@@ -66,16 +72,48 @@ size_flags_horizontal = 3
 text = "Need"
 
 [node name="Spacer" type="Control" parent="VBoxContainer/TabContainer/MainMenu" unique_id=157554839]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
+
+[node name="DebugMessage" type="RichTextLabel" parent="VBoxContainer/TabContainer/MainMenu" unique_id=100498302]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 2
+text = "asdfafgsa"
+fit_content = true
+horizontal_alignment = 1
+selection_enabled = true
 
 [node name="SaveButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=488224805]
 layout_mode = 2
 text = "Save"
 
-[node name="SyncButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1542147529]
+[node name="Spacer2" type="Control" parent="VBoxContainer/TabContainer/MainMenu" unique_id=737781258]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-text = "Sync"
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1371460532]
+visible = false
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+indeterminate = true
+editor_preview_indeterminate = false
+
+[node name="PullButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1542147529]
+layout_mode = 2
+text = "Pull"
+
+[node name="Spacer3" type="Control" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1731445426]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="PushButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1395095842]
+layout_mode = 2
+text = "Push"
+
+[node name="DebugServerButton" type="CheckButton" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1432417253]
+visible = false
+layout_mode = 2
 
 [node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
 visible = false
@@ -178,7 +216,9 @@ font = SubResource("SystemFont_5tt2m")
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SyncButton" to="." method="_on_sync_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/PullButton" to="." method="_on_pull_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/PushButton" to="." method="_on_push_button_pressed"]
+[connection signal="toggled" from="VBoxContainer/TabContainer/MainMenu/DebugServerButton" to="." method="_on_check_button_toggled"]
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/DateEdit" to="." method="_on_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/WeekButton" to="." method="_on_week_button_pressed"]

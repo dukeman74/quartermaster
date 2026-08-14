@@ -4,10 +4,13 @@ var items:Array[Item]
 var counts:Dictionary[String, int]
 var requests:Dictionary[String, int]
 
-func import_items(file:FileAccess) -> void:
+func load_items_from_file(file:FileAccess) -> void:
+	import_items(file.get_as_text())
+
+func import_items(text:String) -> void:
 	items = []
 	counts = {}
-	var imported:Variant = JSON.parse_string(file.get_as_text())
+	var imported:Variant = JSON.parse_string(text)
 	if imported is not Array: return
 	for thing:Variant in imported:
 		if thing is not Dictionary: continue
@@ -28,12 +31,18 @@ func import_items(file:FileAccess) -> void:
 func item_to_representation(item:Item) -> Dictionary:
 	return {item.name: item.expiry_time}
 
-func export_items(file:FileAccess) -> void:
-	file.store_string(JSON.stringify(items.map(item_to_representation),"	",false))
+func items_to_text() -> String:
+	return JSON.stringify(items.map(item_to_representation),"	",false)
 
-func import_requests(file:FileAccess) -> void:
+func export_items(file:FileAccess) -> void:
+	file.store_string(items_to_text())
+
+func load_requests_from_file(file:FileAccess) -> void:
+	import_requests(file.get_as_text())
+
+func import_requests(text:String) -> void:
 	requests = {}
-	var imported:Variant = JSON.parse_string(file.get_as_text())
+	var imported:Variant = JSON.parse_string(text)
 	if imported is not Dictionary: return
 	var dict :Dictionary = imported
 	for key:Variant in dict.keys():
@@ -46,5 +55,8 @@ func import_requests(file:FileAccess) -> void:
 		var count:int = int(float_count)
 		requests[key_string] = count
 
+func requests_to_text() -> String:
+	return JSON.stringify(requests,"	",false)
+
 func export_requests(file:FileAccess) -> void:
-	file.store_string(JSON.stringify(requests,"	",false))
+	file.store_string(requests_to_text())
