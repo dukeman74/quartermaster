@@ -9,7 +9,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_5tt2m"]
 
-[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "have_button", "need_button", "progress_bar", "spacer_2", "debug_message", "name_name_edit", "number_edit", "intone_2_indicator", "need", "need_tab", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "pull_button", "push_button")]
+[node name="Menu" type="Control" unique_id=1505111558 node_paths=PackedStringArray("name_edit", "date_edit", "have_button", "need_button", "progress_bar", "spacer_2", "debug_message", "settings_tab", "authority_edit", "check_box", "name_name_edit", "number_edit", "intone_2_indicator", "need", "need_tab", "intone_indicator", "have", "main_menu", "have_tab", "have_modification_row", "save_button", "pull_button", "push_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,6 +24,9 @@ need_button = NodePath("VBoxContainer/TabContainer/MainMenu/NeedButton")
 progress_bar = NodePath("VBoxContainer/TabContainer/MainMenu/ProgressBar")
 spacer_2 = NodePath("VBoxContainer/TabContainer/MainMenu/Spacer2")
 debug_message = NodePath("VBoxContainer/TabContainer/MainMenu/DebugMessage")
+settings_tab = NodePath("VBoxContainer/TabContainer/SettingsTab")
+authority_edit = NodePath("VBoxContainer/TabContainer/SettingsTab/AuthorityTab/AuthorityEdit")
+check_box = NodePath("VBoxContainer/TabContainer/SettingsTab/ServerLabel/CheckBox")
 name_name_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NameNameEdit")
 number_edit = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NumberEdit")
 intone_2_indicator = NodePath("VBoxContainer/TabContainer/NeedTab/NeedModificationRow/Intone2Indicator")
@@ -111,9 +114,11 @@ layout_mode = 2
 layout_mode = 2
 text = "Push"
 
-[node name="DebugServerButton" type="CheckButton" parent="VBoxContainer/TabContainer/MainMenu" unique_id=1432417253]
-visible = false
+[node name="SettingsButton" type="Button" parent="VBoxContainer/TabContainer/MainMenu" unique_id=874013579]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+text = "Settings"
 
 [node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
 visible = false
@@ -213,12 +218,38 @@ filter_edit = NodePath("../../FilterEdit")
 scroll_container = NodePath("..")
 font = SubResource("SystemFont_5tt2m")
 
+[node name="SettingsTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=2078658133]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="AuthorityTab" type="HBoxContainer" parent="VBoxContainer/TabContainer/SettingsTab" unique_id=1148741580]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/SettingsTab/AuthorityTab" unique_id=1960582488]
+layout_mode = 2
+text = "Authroity"
+
+[node name="AuthorityEdit" type="LineEdit" parent="VBoxContainer/TabContainer/SettingsTab/AuthorityTab" unique_id=915096081]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ServerLabel" type="HBoxContainer" parent="VBoxContainer/TabContainer/SettingsTab" unique_id=1464213537]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/SettingsTab/ServerLabel" unique_id=771991197]
+layout_mode = 2
+text = "Server"
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/TabContainer/SettingsTab/ServerLabel" unique_id=758552582]
+layout_mode = 2
+
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/PullButton" to="." method="_on_pull_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/PushButton" to="." method="_on_push_button_pressed"]
-[connection signal="toggled" from="VBoxContainer/TabContainer/MainMenu/DebugServerButton" to="." method="_on_check_button_toggled"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/NameEdit" to="." method="_on_text_submitted"]
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/DateEdit" to="." method="_on_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/HaveTab/HaveModificationRow/WeekButton" to="." method="_on_week_button_pressed"]
@@ -228,3 +259,5 @@ font = SubResource("SystemFont_5tt2m")
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NameNameEdit" to="." method="_on_need_submitted"]
 [connection signal="text_submitted" from="VBoxContainer/TabContainer/NeedTab/NeedModificationRow/NumberEdit" to="." method="_on_need_submitted"]
 [connection signal="text_changed" from="VBoxContainer/TabContainer/NeedTab/FilterEdit" to="VBoxContainer/TabContainer/NeedTab/ScrollContainer/Need" method="_on_filter_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/TabContainer/SettingsTab/AuthorityTab/AuthorityEdit" to="." method="_on_authority_edit_text_submitted"]
+[connection signal="toggled" from="VBoxContainer/TabContainer/SettingsTab/ServerLabel/CheckBox" to="." method="_on_check_box_toggled"]

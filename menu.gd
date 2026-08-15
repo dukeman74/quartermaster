@@ -11,7 +11,10 @@ class_name Menu extends Control
 @export var spacer_2: Control
 
 @export var debug_message: RichTextLabel
+@export var settings_tab: VBoxContainer
 
+@export var authority_edit: LineEdit
+@export var check_box: CheckBox
 
 
 @export var name_name_edit: LineEdit
@@ -111,8 +114,8 @@ func _ready() -> void:
 	need._on_filter_edit_text_changed()
 	#have_modification_row.visible = authority == "localhost"
 	#save_button.visible = authority == "localhost"
-	pull_button.visible = true#authority != "localhost"
-	push_button.visible = true#authority != "localhost"
+	pull_button.visible = authority != "localhost"
+	push_button.visible = authority != "localhost"
 	if server:
 		tcp_server = TCPServer.new()
 		tcp_server.listen(PORT)
@@ -130,6 +133,15 @@ func save() -> void:
 	var items:= FileAccess.open(items_path,FileAccess.WRITE)
 	inventory.export_items(items)
 	items.close()
+	save_settings()
+
+func save_settings() -> void:
+	var settings := FileAccess.open(settings_file_path, FileAccess.WRITE)
+	if not settings: 
+		good_print("encountered: " + error_string(FileAccess.get_open_error()) + " while trying to open " + settings_file_path + " for writing")
+		return
+	settings.store_string(JSON.stringify({auth_key: authority, server_key: server},"	",false))
+	settings.close()
 
 func get_item_name(edit:LineEdit) -> String:
 	var current := edit.text.to_lower()
@@ -259,7 +271,7 @@ func _on_push_button_pressed() -> void:
 	if executor and executor.is_started():
 		executor.wait_to_finish()
 	executor = Thread.new()
-	executor.start(pull_wrapper)
+	executor.start(push_wrapper)
 
 func read_in_net_data(net_data:String) -> void:
 	var parts := net_data.split("|")
@@ -351,7 +363,14 @@ func pull() -> void:
 			return
 	good_print("timed out waiting for response")
 
-func _on_check_button_toggled(toggled_on: bool) -> void: #debug button to allow a server and client on same machine
+
+func _on_settings_button_pressed() -> void:
+	settings_tab.visible = true
+	check_box.set_pressed_no_signal(server)
+	authority_edit.placeholder_text = authority
+	authority_edit.text = ""
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
 	server = toggled_on
 	if server:
 		tcp_server = TCPServer.new()
@@ -359,5 +378,8 @@ func _on_check_button_toggled(toggled_on: bool) -> void: #debug button to allow 
 		if error != Error.OK:
 			good_print("trying to start server, but encountered %s" % error_string(error))
 			return
-		pull_button.visible = false
-		push_button.visible = false
+	pull_button.visible = not server
+	push_button.visible = not server
+
+func _on_authority_edit_text_submitted(new_text: String) -> void:
+	authority = new_text

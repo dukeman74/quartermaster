@@ -28,6 +28,7 @@ gdscript/warnings/unsafe_call_argument=1
 [display]
 
 window/handheld/orientation=5
+window/stretch/scale.android=1.5
 
 [input]
 
