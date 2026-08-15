@@ -207,7 +207,7 @@ func _on_text_submitted(_new_text: String) -> void:
 		year += 2000
 	var time_dict := {"month": month, "day": int(parts[1]), "year":year, "hour":23, "minute":59, "second":59}
 	var time := Time.get_unix_time_from_datetime_dict(time_dict)
-	if time < Time.get_unix_time_from_system(): return
+	#if time < Time.get_unix_time_from_system(): return
 	intone_item(time, item_name)
 
 
