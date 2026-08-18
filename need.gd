@@ -19,6 +19,10 @@ var fulfillments:Array[Fulfillment]
 
 func draw_text(y:float, index:int) -> void:
 	var fulfillment:=fulfillments[index]
+	var filled:=fulfillment.count/float(fulfillment.requested_count)
+	var color:=Color.GREEN
+	if filled >= 1: color = Color.AQUA
+	draw_rect(Rect2(0,y+line_visual_offset,size.x*filled,-line_sep),Color(color,.1))
 	draw_string(font, Vector2(0, y), fulfillment.item_name)
 	draw_string(font, Vector2(size.x-500, y), str(fulfillment.count))
 	draw_string(font, Vector2(size.x-300, y),str(fulfillment.requested_count),HORIZONTAL_ALIGNMENT_RIGHT,200)

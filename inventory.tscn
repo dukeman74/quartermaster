@@ -54,13 +54,19 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 script = ExtResource("2_mrqgh")
 
+[node name="BackButton" type="Button" parent="VBoxContainer" unique_id=150399332]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Back"
+
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=50374542]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 
 [node name="MainMenu" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1537824872]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -121,7 +127,6 @@ size_flags_vertical = 10
 text = "Settings"
 
 [node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -244,6 +249,7 @@ text = "Server"
 [node name="CheckBox" type="CheckBox" parent="VBoxContainer/TabContainer/SettingsTab/ServerLabel" unique_id=758552582]
 layout_mode = 2
 
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="back"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/HaveButton" to="." method="_on_have_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/NeedButton" to="." method="_on_need_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/MainMenu/SaveButton" to="." method="_on_save_button_pressed"]
