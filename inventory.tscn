@@ -62,11 +62,10 @@ text = "Back"
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=50374542]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 
 [node name="MainMenu" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1537824872]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -127,6 +126,7 @@ size_flags_vertical = 10
 text = "Settings"
 
 [node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
