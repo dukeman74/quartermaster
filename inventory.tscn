@@ -125,6 +125,11 @@ size_flags_horizontal = 0
 size_flags_vertical = 10
 text = "Settings"
 
+[node name="Space" type="Control" parent="VBoxContainer/TabContainer/MainMenu" unique_id=495151726]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+script = ExtResource("2_mrqgh")
+
 [node name="HaveTab" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1305098089]
 visible = false
 layout_mode = 2

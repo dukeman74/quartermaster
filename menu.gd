@@ -198,7 +198,12 @@ func _on_text_submitted(_new_text: String) -> void:
 	var item_name := get_item_name(name_edit)
 	if item_name == "": return
 	var date_string :String = date_edit.text
-	var parts:= date_string.split(" ")
+	var delimiter := " "
+	if delimiter not in date_string:
+		delimiter = "-"
+	if delimiter not in date_string:
+		delimiter = "/"
+	var parts:= date_string.split(delimiter)
 	var month:int
 	if parts[0] not in month_to_month: 
 		if not parts[0].is_valid_int(): return
